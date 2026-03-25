@@ -37,7 +37,7 @@ export default function FilterPanel({
           onChange={(e) => update({ period_code: e.target.value || undefined })}
         >
           <option value="">すべて</option>
-          {options?.periods.map((p) => (
+          {options?.periods?.map((p) => (
             <option key={p.code} value={p.code}>
               {p.display}
             </option>
@@ -56,7 +56,7 @@ export default function FilterPanel({
           }
         >
           <option value="">すべて</option>
-          {options?.municipalities.map((m) => (
+          {options?.municipalities?.map((m) => (
             <option key={m.code} value={m.code}>
               {m.name}
             </option>
@@ -73,7 +73,7 @@ export default function FilterPanel({
           onChange={(e) => update({ floor_plan: e.target.value || undefined })}
         >
           <option value="">すべて</option>
-          {options?.floor_plans.map((fp) => (
+          {options?.floor_plans?.map((fp) => (
             <option key={fp} value={fp}>
               {fp}
             </option>
@@ -225,7 +225,7 @@ export default function FilterPanel({
       </fieldset>
 
       {/* 向き */}
-      {options && options.directions.length > 0 && (
+      {options?.directions && options.directions.length > 0 && (
         <fieldset>
           <label className="block font-medium mb-1">
             向き
