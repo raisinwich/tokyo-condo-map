@@ -53,13 +53,32 @@ export default function FilterPanel({
           className="w-full border rounded px-2 py-1.5"
           value={filters.municipality_code ?? ""}
           onChange={(e) =>
-            update({ municipality_code: e.target.value || undefined })
+            update({ municipality_code: e.target.value || undefined, district_name: undefined })
           }
         >
           <option value="">すべて</option>
           {options?.municipalities?.map((m) => (
             <option key={m.code} value={m.code}>
               {m.name}
+            </option>
+          ))}
+        </select>
+      </fieldset>
+
+      {/* 地区名 */}
+      <fieldset>
+        <label className="block font-medium mb-1">地区名</label>
+        <select
+          className="w-full border rounded px-2 py-1.5"
+          value={filters.district_name ?? ""}
+          onChange={(e) =>
+            update({ district_name: e.target.value || undefined })
+          }
+        >
+          <option value="">すべて</option>
+          {options?.districts?.map((d) => (
+            <option key={d} value={d}>
+              {d}
             </option>
           ))}
         </select>

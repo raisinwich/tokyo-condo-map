@@ -22,6 +22,7 @@ function buildQuery(filters: FilterParams): string {
   const params = new URLSearchParams();
   if (filters.period_code) params.set("period_code", filters.period_code);
   if (filters.municipality_code) params.set("municipality_code", filters.municipality_code);
+  if (filters.district_name) params.set("district_name", filters.district_name);
   if (filters.floor_plan) params.set("floor_plan", filters.floor_plan);
   if (filters.direction) params.set("direction", filters.direction);
   if (filters.building_age_min != null) params.set("building_age_min", String(filters.building_age_min));
@@ -67,13 +68,15 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [, setSelected] = useState<Transaction | null>(null);
 
-  // フィルタ選択肢を取得
+  // フィルタ選択肢を取得（市区町村変更時に地区名リストを更新）
   useEffect(() => {
-    fetch("/api/filters")
+    const params = new URLSearchParams();
+    if (filters.municipality_code) params.set("municipality_code", filters.municipality_code);
+    fetch(`/api/filters?${params.toString()}`)
       .then((r) => r.json())
       .then(setOptions)
       .catch((e) => console.error("Failed to load filters:", e));
-  }, []);
+  }, [filters.municipality_code]);
 
   // データ取得
   useEffect(() => {
@@ -101,6 +104,7 @@ export default function HomePage() {
   }, [
     filters.period_code,
     filters.municipality_code,
+    filters.district_name,
     filters.floor_plan,
     filters.direction,
     filters.building_age_min,

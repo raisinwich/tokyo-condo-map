@@ -60,6 +60,7 @@ export interface FilterParams {
   direction?: string;
   floor_plan?: string;
   municipality_code?: string;
+  district_name?: string;
   sort_by?: string;
   sort_order?: "asc" | "desc";
   limit?: number;
@@ -72,6 +73,7 @@ export interface FilterParams {
 export interface FilterOptions {
   periods: { code: string; display: string }[];
   municipalities: { code: string; name: string }[];
+  districts: string[];
   floor_plans: string[];
   directions: string[];
   stats: {

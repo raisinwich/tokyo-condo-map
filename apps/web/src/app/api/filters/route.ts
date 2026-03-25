@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 
 /**
@@ -6,9 +6,29 @@ import pool from "@/lib/db";
  *
  * フィルタUIの選択肢と統計情報を返す。
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const [periodsRes, municipalitiesRes, floorPlansRes, directionsRes, statsRes] =
+    const sp = request.nextUrl.searchParams;
+    const municipalityCode = sp.get("municipality_code");
+
+    // 地区名は選択中の市区町村に応じて動的に取得
+    const districtQuery = municipalityCode
+      ? pool.query(
+          `SELECT DISTINCT district_name
+           FROM transactions
+           WHERE district_name IS NOT NULL AND district_name != ''
+             AND municipality_code = $1
+           ORDER BY district_name`,
+          [municipalityCode]
+        )
+      : pool.query(
+          `SELECT DISTINCT district_name
+           FROM transactions
+           WHERE district_name IS NOT NULL AND district_name != ''
+           ORDER BY district_name`
+        );
+
+    const [periodsRes, municipalitiesRes, districtsRes, floorPlansRes, directionsRes, statsRes] =
       await Promise.all([
         pool.query(
           `SELECT DISTINCT period_code as code, period_display as display
@@ -22,6 +42,7 @@ export async function GET() {
            WHERE municipality_code IS NOT NULL AND municipality IS NOT NULL
            ORDER BY municipality_code`
         ),
+        districtQuery,
         pool.query(
           `SELECT DISTINCT floor_plan
            FROM transactions
@@ -47,6 +68,7 @@ export async function GET() {
     return NextResponse.json({
       periods: periodsRes.rows,
       municipalities: municipalitiesRes.rows,
+      districts: districtsRes.rows.map((r: { district_name: string }) => r.district_name),
       floor_plans: floorPlansRes.rows.map((r: { floor_plan: string }) => r.floor_plan),
       directions: directionsRes.rows.map((r: { direction: string }) => r.direction),
       stats: {

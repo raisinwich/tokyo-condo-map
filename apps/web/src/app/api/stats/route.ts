@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
 
   if (sp.get("period_code")) addCondition("period_code = ?", sp.get("period_code"));
   if (sp.get("municipality_code")) addCondition("municipality_code = ?", sp.get("municipality_code"));
+  if (sp.get("district_name")) addCondition("district_name = ?", sp.get("district_name"));
   if (sp.get("floor_plan")) addCondition("floor_plan = ?", sp.get("floor_plan"));
   if (sp.get("building_age_min")) addCondition("building_age >= ?", Number(sp.get("building_age_min")));
   if (sp.get("building_age_max")) addCondition("building_age <= ?", Number(sp.get("building_age_max")));

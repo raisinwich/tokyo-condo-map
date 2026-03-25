@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
   // フィルタ条件
   if (sp.get("period_code")) addCondition("period_code = ?", sp.get("period_code"));
   if (sp.get("municipality_code")) addCondition("municipality_code = ?", sp.get("municipality_code"));
+  if (sp.get("district_name")) addCondition("district_name = ?", sp.get("district_name"));
   if (sp.get("floor_plan")) addCondition("floor_plan = ?", sp.get("floor_plan"));
   if (sp.get("direction")) addCondition("direction = ?", sp.get("direction"));
 
