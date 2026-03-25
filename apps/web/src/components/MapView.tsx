@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Transaction } from "@/types/transaction";
-import { formatPrice, formatUnitPrice, formatArea, formatAge } from "@/lib/format";
+import { formatPrice, formatTsuboPrice, formatArea, formatAge } from "@/lib/format";
 
 interface MapViewProps {
   data: Transaction[];
@@ -26,6 +26,19 @@ function getPriceColor(unitPrice: number | null): string {
   if (man < 100) return "#eab308";  // yellow
   if (man < 150) return "#f97316";  // orange
   return "#ef4444";                  // red - 高い
+}
+
+/**
+ * IDベースの決定論的ジッター。同じ市区町村中心座標を持つ点を散らす。
+ * 約±0.01度 (約1km) の範囲でオフセットを加える。
+ */
+function jitter(id: number): [number, number] {
+  // 簡易的なハッシュでIDから決定論的にオフセットを生成
+  const a = Math.sin(id * 127.1) * 43758.5453;
+  const b = Math.sin(id * 269.5) * 76543.2109;
+  const dx = (a - Math.floor(a) - 0.5) * 0.02;
+  const dy = (b - Math.floor(b) - 0.5) * 0.02;
+  return [dx, dy];
 }
 
 export default function MapView({ data, onSelect }: MapViewProps) {
@@ -101,7 +114,7 @@ export default function MapView({ data, onSelect }: MapViewProps) {
             ${t.municipality ?? ""} ${t.district_name ?? ""}
           </div>
           <div>価格: ${formatPrice(t.trade_price_yen)}</div>
-          <div>㎡単価: ${formatUnitPrice(t.unit_price_per_sqm)}</div>
+          <div>坪単価: ${formatTsuboPrice(t.unit_price_per_sqm)}</div>
           <div>面積: ${formatArea(t.area_sqm)}</div>
           <div>間取り: ${t.floor_plan ?? "-"}</div>
           <div>${formatAge(t.building_age)} / ${t.structure ?? "-"}</div>
@@ -109,8 +122,15 @@ export default function MapView({ data, onSelect }: MapViewProps) {
         </div>
       `);
 
+      // IDベースのジッターで同一座標の点を散らす
+      // PostgreSQL NUMERIC型が文字列で返される場合があるため Number() で変換
+      const [dx, dy] = jitter(t.id);
+      const lng = Number(t.lng) + dx;
+      const lat = Number(t.lat) + dy;
+      if (isNaN(lng) || isNaN(lat)) return;
+
       const marker = new maplibregl.Marker({ element: el })
-        .setLngLat([t.lng!, t.lat!])
+        .setLngLat([lng, lat])
         .setPopup(popup)
         .addTo(map);
 

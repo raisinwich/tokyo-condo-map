@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice, formatUnitPrice, formatArea } from "@/lib/format";
+import { formatPrice, formatTsuboPrice, formatArea } from "@/lib/format";
 
 interface StatsBarProps {
   totalCount: number;
@@ -20,7 +20,7 @@ export default function StatsBar({
   const items = [
     { label: "件数", value: `${(totalCount ?? 0).toLocaleString()}件` },
     { label: "平均価格", value: formatPrice(avgPrice) },
-    { label: "平均㎡単価", value: formatUnitPrice(avgUnitPrice) },
+    { label: "平均坪単価", value: formatTsuboPrice(avgUnitPrice) },
     { label: "平均面積", value: formatArea(avgArea) },
     { label: "平均築年数", value: avgAge != null ? `${avgAge.toFixed(1)}年` : "-" },
   ];

@@ -1,7 +1,7 @@
 "use client";
 
 import { Transaction, FilterParams } from "@/types/transaction";
-import { formatPrice, formatUnitPrice, formatArea, formatAge, formatStationDistance } from "@/lib/format";
+import { formatPrice, formatTsuboPrice, formatArea, formatAge, formatStationDistance } from "@/lib/format";
 
 interface TransactionTableProps {
   data: Transaction[];
@@ -24,7 +24,7 @@ const COLUMNS: SortableColumn[] = [
   { key: "municipality", label: "区市町村", sortable: false, render: (t) => t.municipality ?? "-" },
   { key: "district_name", label: "地区名", sortable: false, render: (t) => t.district_name ?? "-" },
   { key: "trade_price_yen", label: "価格", sortable: true, render: (t) => formatPrice(t.trade_price_yen) },
-  { key: "unit_price_per_sqm", label: "㎡単価", sortable: true, render: (t) => formatUnitPrice(t.unit_price_per_sqm) },
+  { key: "unit_price_per_sqm", label: "坪単価", sortable: true, render: (t) => formatTsuboPrice(t.unit_price_per_sqm) },
   { key: "area_sqm", label: "面積", sortable: true, render: (t) => formatArea(t.area_sqm) },
   { key: "building_age", label: "築年数", sortable: true, render: (t) => formatAge(t.building_age) },
   { key: "floor_plan", label: "間取り", sortable: false, render: (t) => t.floor_plan ?? "-" },

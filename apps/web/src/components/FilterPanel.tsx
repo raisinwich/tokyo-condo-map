@@ -1,6 +1,7 @@
 "use client";
 
 import { FilterOptions, FilterParams } from "@/types/transaction";
+import { sqmToTsubo, tsuboToSqm } from "@/lib/format";
 
 interface FilterPanelProps {
   filters: FilterParams;
@@ -115,9 +116,9 @@ export default function FilterPanel({
         </div>
       </fieldset>
 
-      {/* ㎡単価 (万円) */}
+      {/* 坪単価 (万円/坪) — 内部では㎡単価(円)で保持 */}
       <fieldset>
-        <label className="block font-medium mb-1">㎡単価（万円）</label>
+        <label className="block font-medium mb-1">坪単価（万円/坪）</label>
         <div className="flex gap-2 items-center">
           <input
             type="number"
@@ -125,13 +126,13 @@ export default function FilterPanel({
             className="w-full border rounded px-2 py-1.5"
             value={
               filters.unit_price_min
-                ? Math.round(filters.unit_price_min / 10000)
+                ? Math.round((sqmToTsubo(filters.unit_price_min) ?? 0) / 10000)
                 : ""
             }
             onChange={(e) =>
               update({
                 unit_price_min: e.target.value
-                  ? Number(e.target.value) * 10000
+                  ? tsuboToSqm(Number(e.target.value) * 10000) ?? undefined
                   : undefined,
               })
             }
@@ -143,13 +144,13 @@ export default function FilterPanel({
             className="w-full border rounded px-2 py-1.5"
             value={
               filters.unit_price_max
-                ? Math.round(filters.unit_price_max / 10000)
+                ? Math.round((sqmToTsubo(filters.unit_price_max) ?? 0) / 10000)
                 : ""
             }
             onChange={(e) =>
               update({
                 unit_price_max: e.target.value
-                  ? Number(e.target.value) * 10000
+                  ? tsuboToSqm(Number(e.target.value) * 10000) ?? undefined
                   : undefined,
               })
             }

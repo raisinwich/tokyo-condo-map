@@ -9,11 +9,27 @@ export function formatPrice(yen: number | null): string {
   return `${man.toLocaleString()}万円`;
 }
 
-/** ㎡単価を万円/㎡表示 */
-export function formatUnitPrice(yen: number | null): string {
-  if (yen == null) return "-";
-  const man = Math.round(yen / 10000);
-  return `${man.toLocaleString()}万円/㎡`;
+/** 1坪 = 3.30579㎡ */
+const TSUBO_PER_SQM = 3.30579;
+
+/** ㎡単価から坪単価(万円/坪)を計算して表示 */
+export function formatTsuboPrice(yenPerSqm: number | null): string {
+  if (yenPerSqm == null) return "-";
+  const yenPerTsubo = yenPerSqm * TSUBO_PER_SQM;
+  const man = Math.round(yenPerTsubo / 10000);
+  return `${man.toLocaleString()}万円/坪`;
+}
+
+/** ㎡単価(円)から坪単価(円)に変換 */
+export function sqmToTsubo(yenPerSqm: number | null): number | null {
+  if (yenPerSqm == null) return null;
+  return Math.round(yenPerSqm * TSUBO_PER_SQM);
+}
+
+/** 坪単価(円)から㎡単価(円)に変換 */
+export function tsuboToSqm(yenPerTsubo: number | null): number | null {
+  if (yenPerTsubo == null) return null;
+  return Math.round(yenPerTsubo / TSUBO_PER_SQM);
 }
 
 /** 面積を表示 */
