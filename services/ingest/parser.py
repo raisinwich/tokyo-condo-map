@@ -156,5 +156,7 @@ def parse_transaction(record: dict[str, Any]) -> dict[str, Any]:
         "city_planning": record.get("CityPlanning"),
         "renovation": record.get("Renovation"),
         "remarks": record.get("Remarks"),
+        "lat": None,
+        "lng": None,
         "raw_json": record,
     }

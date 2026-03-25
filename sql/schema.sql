@@ -61,11 +61,15 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 -- 重複防止用ユニーク制約
 -- 同一の取引時期・地区・価格・面積・間取りの組み合わせで重複を防ぐ
-CREATE UNIQUE INDEX IF NOT EXISTS uix_transactions_dedup
-    ON transactions (period_code, municipality_code, district_name, trade_price_yen, area_sqm, floor_plan)
-    WHERE period_code IS NOT NULL
-      AND municipality_code IS NOT NULL
-      AND district_name IS NOT NULL;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'uix_transactions_dedup'
+    ) THEN
+        ALTER TABLE transactions ADD CONSTRAINT uix_transactions_dedup
+            UNIQUE (period_code, municipality_code, district_name, trade_price_yen, area_sqm, floor_plan);
+    END IF;
+END $$;
 
 -- 検索用インデックス
 CREATE INDEX IF NOT EXISTS idx_transactions_period       ON transactions (period_code);
