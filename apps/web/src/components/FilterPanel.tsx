@@ -24,7 +24,7 @@ export default function FilterPanel({
       <div className="flex items-center justify-between">
         <h2 className="font-bold text-base">フィルタ</h2>
         <span className="text-xs text-gray-500">
-          {resultCount.toLocaleString()}件
+          {(resultCount ?? 0).toLocaleString()}件
         </span>
       </div>
 

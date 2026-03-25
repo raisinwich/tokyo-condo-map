@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import FilterPanel from "@/components/FilterPanel";
 import TransactionTable from "@/components/TransactionTable";
 import StatsBar from "@/components/StatsBar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import type {
   Transaction,
   FilterParams,
@@ -135,7 +136,7 @@ export default function HomePage() {
         setData((prev) => [...prev, ...res.data]);
       })
       .catch((e) => console.error("Failed to load more:", e));
-  }, [data.length, filters]);
+  }, [data?.length, filters]);
 
   const handleSelect = useCallback((t: Transaction) => {
     setSelected(t);
@@ -175,7 +176,9 @@ export default function HomePage() {
                 <span className="text-sm text-gray-500">読み込み中...</span>
               </div>
             )}
-            <MapView data={data} onSelect={handleSelect} />
+            <ErrorBoundary>
+              <MapView data={data} onSelect={handleSelect} />
+            </ErrorBoundary>
           </div>
 
           {/* テーブル */}

@@ -18,7 +18,7 @@ export default function StatsBar({
   avgAge,
 }: StatsBarProps) {
   const items = [
-    { label: "件数", value: `${totalCount.toLocaleString()}件` },
+    { label: "件数", value: `${(totalCount ?? 0).toLocaleString()}件` },
     { label: "平均価格", value: formatPrice(avgPrice) },
     { label: "平均㎡単価", value: formatUnitPrice(avgUnitPrice) },
     { label: "平均面積", value: formatArea(avgArea) },
