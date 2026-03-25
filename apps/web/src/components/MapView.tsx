@@ -29,15 +29,15 @@ function getPriceColor(unitPrice: number | null): string {
 }
 
 /**
- * IDベースの決定論的ジッター。同じ市区町村中心座標を持つ点を散らす。
- * 約±0.01度 (約1km) の範囲でオフセットを加える。
+ * IDベースの決定論的ジッター。同じ地区座標を持つ点を散らす。
+ * 地区レベルの座標に対して ±0.0008度 (約80m) のオフセットを加える。
+ * 国交省APIは厳密な物件位置を返さないため、あくまで視覚的な散布用。
  */
 function jitter(id: number): [number, number] {
-  // 簡易的なハッシュでIDから決定論的にオフセットを生成
   const a = Math.sin(id * 127.1) * 43758.5453;
   const b = Math.sin(id * 269.5) * 76543.2109;
-  const dx = (a - Math.floor(a) - 0.5) * 0.02;
-  const dy = (b - Math.floor(b) - 0.5) * 0.02;
+  const dx = (a - Math.floor(a) - 0.5) * 0.0016;
+  const dy = (b - Math.floor(b) - 0.5) * 0.0016;
   return [dx, dy];
 }
 
