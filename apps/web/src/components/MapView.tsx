@@ -81,6 +81,7 @@ export default function MapView({ data, onSelect }: MapViewProps) {
     markersRef.current = [];
 
     // 座標のあるデータのみマーカー表示 (パフォーマンスのため最大2000件)
+    if (!data || !Array.isArray(data)) return;
     const withCoords = data
       .filter((t) => t.lat != null && t.lng != null)
       .slice(0, 2000);

@@ -43,7 +43,8 @@ export default function TransactionTable({
   onLoadMore,
   onSelect,
 }: TransactionTableProps) {
-  const hasMore = data.length < total;
+  const safeData = data ?? [];
+  const hasMore = safeData.length < total;
 
   return (
     <div className="flex flex-col h-full">
@@ -70,7 +71,7 @@ export default function TransactionTable({
             </tr>
           </thead>
           <tbody>
-            {data.map((t) => (
+            {safeData.map((t) => (
               <tr
                 key={t.id}
                 className="hover:bg-blue-50 cursor-pointer transition"
@@ -83,7 +84,7 @@ export default function TransactionTable({
                 ))}
               </tr>
             ))}
-            {data.length === 0 && (
+            {safeData.length === 0 && (
               <tr>
                 <td colSpan={COLUMNS.length} className="text-center py-8 text-gray-400">
                   データがありません
@@ -100,7 +101,7 @@ export default function TransactionTable({
             className="text-blue-600 hover:underline text-xs"
             onClick={onLoadMore}
           >
-            さらに読み込む（{data.length} / {total.toLocaleString()}件）
+            さらに読み込む（{safeData.length} / {total.toLocaleString()}件）
           </button>
         </div>
       )}

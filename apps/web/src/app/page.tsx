@@ -84,8 +84,8 @@ export default function HomePage() {
       fetch(`/api/stats?${query}`).then((r) => r.json()),
     ])
       .then(([txRes, statsRes]: [TransactionsResponse, StatsResponse]) => {
-        setData(txRes.data);
-        setTotal(txRes.total);
+        setData(txRes.data ?? []);
+        setTotal(txRes.total ?? 0);
         setStats({
           totalCount: statsRes.total_count ?? txRes.total,
           avgUnitPrice: statsRes.avg_unit_price ?? null,
